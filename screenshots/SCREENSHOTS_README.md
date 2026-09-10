@@ -10,11 +10,11 @@ A visual walkthrough of the NIRMAAN project-monitoring platform: login and dashb
 
 **Login**
 
-![Login page](screenshots/login-page.png)
+![Login page](login-page.png)
 
 **Dashboard landing**
 
-![Landing page](screenshots/landing-page.png)
+![Landing page](landing-page.png)
 
 ---
 
@@ -22,31 +22,31 @@ A visual walkthrough of the NIRMAAN project-monitoring platform: login and dashb
 
 **Overview stats — total projects, value, expenditure, states covered**
 
-![Dashboard overview stats](screenshots/dashboard-overview-stats.png)
+![Dashboard overview stats](dashboard-overview-stats.png)
 
 **Top 10 high-value projects**
 
-![Top high-value projects](screenshots/top-high-value-projects.png)
+![Top high-value projects](top-high-value-projects.png)
 
 **State-wise projects**
 
-![State-wise projects](screenshots/statewise-projects.png)
+![State-wise projects](statewise-projects.png)
 
 **Quarter reporting pattern & cost/expenditure by sector**
 
-![Quarter reporting and sector cost](screenshots/quarter-reporting-sector-cost.png)
+![Quarter reporting and sector cost](quarter-reporting-sector-cost.png)
 
 **Cost & expenditure trend, with project search**
 
-![Cost and expenditure chart](screenshots/cost-expenditure-chart.png)
+![Cost and expenditure chart](cost-expenditure-chart.png)
 
 **Median progress ratio by sector & annual cumulative expenditure**
 
-![Progress ratio and expenditure](screenshots/progress-ratio-expenditure-cost.png)
+![Progress ratio and expenditure](progress-ratio-expenditure-cost.png)
 
 **Annual anticipated cost trend**
 
-![Annual anticipated cost](screenshots/annual-anticipated-cost-2.png)
+![Annual anticipated cost](annual-anticipated-cost-2.png)
 
 ---
 
@@ -54,7 +54,7 @@ A visual walkthrough of the NIRMAAN project-monitoring platform: login and dashb
 
 **Single project lookup — cost trend, expenditure, and quarterly history**
 
-![Project detail and history](screenshots/project-detail-history.png)
+![Project detail and history](project-detail-history.png)
 
 ---
 
@@ -62,19 +62,19 @@ A visual walkthrough of the NIRMAAN project-monitoring platform: login and dashb
 
 **Step 1–2: Select input mode & enter project information**
 
-![Project information form](screenshots/project-information-form.png)
+![Project information form](project-information-form.png)
 
 **Step 3–4: Run risk assessment, view results, and the GenAI summary**
 
-![Risk assessment and GenAI summary](screenshots/risk-assessment-genai-summary.png)
+![Risk assessment and GenAI summary](risk-assessment-genai-summary.png)
 
 **Step 5: Risk distribution and quarterly risk trend**
 
-![Risk distribution and quarterly trend](screenshots/risk-distribution-quarterly-trend.png)
+![Risk distribution and quarterly trend](risk-distribution-quarterly-trend.png)
 
 **Full project result — classification, overrun forecast & explainability**
 
-![Project result detail](screenshots/project-result-detail.png)
+![Project result detail](project-result-detail.png)
 
 ---
 
