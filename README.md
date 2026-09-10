@@ -288,555 +288,104 @@ independently (`/classification/predict/batch`, `/overrun/predict`,
 the gateway is an added orchestration layer, not a replacement for the
 standalone endpoints.
 
-## Architecture
+# Running the Website
+
+This guide walks through everything needed to get the app running locally — backend API and frontend — from a clean checkout.
+
+## Prerequisites
+
+- Python 3.10+ and `pip`
+- Node.js 18+ and `npm`
+- Git
+
+## Project Layout
 
 ```
-app/
-  main.py                 # combined FastAPI app: lifespan loads all three services'
-                           # artifacts, mounts all routers, shared error handling
-  core.py                 # backward-compat shim only -- see its docstring
-  common/
-    http.py               # shared error envelope, request-id logging middleware,
-                           # capped CSV-upload reading, offloaded-scoring helper
-    schemas.py             # shared /predict/batch row-validation schema
-    raw_features.py        # shared raw prediction-time schema + feature derivation
-                           # (overrun + anomaly import this; classification does not)
-  classification/
-    config.py             # model paths + OVERRUN_RISK_PROBABILITY_THRESHOLD (default 0.5)
-    schemas.py             # ProjectMetadata / ReportingPeriod / batch request+response models
-    preprocessing.py       # mirrors the training pipeline exactly (landmark/quarter features)
-    inference.py            # OverrunPredictor: loads one ensemble .joblib, predicts probability
-    coordinator.py          # orchestrates preprocessing + both predictors + SHAP reasoning
-    explainers.py           # SHAP-based human-readable reasoning for "Overrun Risk" predictions
-    state.py                # load/unload/get for the coordinator singleton
-    router.py               # /classification/health, /predict/batch
-    training/                # offline retraining scripts (train_cost_v4.py, train_time_model.py)
-  overrun/
-    config.py             # paths, column names, training hyperparameters
-    core.py                # feature engineering + CombinedOverrunPipeline (used for both targets)
-    train.py              # CLI: builds/retrains the two .pkl artifacts from the raw CSV
-    state.py              # load/unload/get_cost/get_time for the two loaded pipelines
-    router.py             # /overrun/health, /schema, /predict, /predict/batch, /predict/csv
-                           # (predict/predict-item already accepts a classifier's
-                           # cost_overrun_risk/time_overrun_risk gate flags -- see gateway/)
-  anomaly/
-    config.py             # frozen validated model configuration
-    core.py                # detector/scoring logic (score_all, fit_hybrid_reference, ...)
-    raw_features.py       # derives every engineered feature from raw prediction-time fields
-    train.py              # offline reference fitting -> models/anomaly_model.joblib
-    state.py              # load/unload/get for the loaded artifact
-    router.py             # /anomaly/health, /model-info, /predict/batch, /predict/csv
-  gateway/
-    router.py             # POST /gateway/predict -- chains classification -> overrun/anomaly
-                           # using the 0.5 probability gate (see "The gating rule" above).
-                           # Only imports each service's existing pieces; never merges them.
-data/
-  paiman_projects_for_anomaly_detection.csv   # anomaly training data (already engineered schema)
-  paiman_projects_landmark_dataset.csv        # overrun training data (raw landmark schema)
-models/
-  final_cost_overrun_pct_combined_model.pkl    # overrun: cost-overrun pipeline
-  final_time_overrun_pct_combined_model.pkl    # overrun: time-overrun pipeline
-  cost_overrun_feature_schema.json
-  time_overrun_feature_schema.json
-  classification/
-    paiman_cost_overrun_ensemble.joblib        # classification: cost-overrun ensemble (XGB+HGB)
-    paiman_time_overrun_ensemble.joblib        # classification: time-overrun ensemble (XGB+HGB)
-Dockerfile
-requirements.txt
+.
+├── app/              # FastAPI backend
+├── frontend/         # Website (frontend)
+├── models/           # Pre-trained model artifacts (shipped, ready to use)
+├── data/             # Datasets
+├── requirements.txt  # Backend Python dependencies
+└── .env              # Backend environment variables (you create this)
 ```
 
-`the anomaly artifact, both overrun artifacts, and both classification artifacts are all shipped already built, so the
-service runs out of the box. Retrain any of them any time its dataset
-changes -- see below.
+## Step 1: Clone the repository
 
-## Setup
+```bash
+git clone <repository-url>
+cd <repository-folder>
+```
+
+## Step 2: Set up environment variables
+
+Two separate `.env` files are required — one for the backend, one for the frontend.
+
+**Root folder `.env`** (backend)
+
+Create a file named `.env` in the project root and add the required keys, for example:
+
+```env
+GOOGLE_API_KEY=your_google_api_key
+HUGGINGFACEHUB_API_TOKEN=your_huggingface_token
+LOG_LEVEL=INFO
+```
+
+**Frontend folder `.env`**
+
+Create a second `.env` file inside the `frontend/` folder for any frontend-specific variables, for example:
+
+```env
+VITE_API_BASE_URL=http://localhost:8000
+```
+
+> Fill in both `.env` files before starting the servers in the next steps — the app will not run correctly without them.
+
+## Step 3: Install backend requirements
+
+From the project root:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-## 1. Train (offline, per service, never inside a request handler)
+## Step 4: Start the backend — Terminal 1
 
-### 1a. Anomaly detection
-
-```bash
-python -m app.anomaly.train
-```
-
-Defaults to `--input data/paiman_projects_for_anomaly_detection.csv --output
-models/anomaly_model.joblib --cutoff 2023-24`; override any of the three if
-needed. The output directory is created automatically if it doesn't exist.
-All three services share one top-level `models/` root; anomaly no longer has a separate artifact subdirectory.
-
-### 1b. Cost + time overrun regression
-
-```bash
-# Place the raw CSV wherever you like and point OVERRUN_RAW_DATA_PATH at it,
-# or use the default location: ./data/paiman_projects_landmark_dataset.csv
-export OVERRUN_RAW_DATA_PATH=/path/to/paiman_projects_landmark_dataset.csv
-
-python -m app.overrun.train --target both
-```
-
-This writes, into `MODEL_DIR` (default `./models`):
-- `final_cost_overrun_pct_combined_model.pkl`
-- `final_time_overrun_pct_combined_model.pkl`
-- `cost_overrun_feature_schema.json`
-- `time_overrun_feature_schema.json`
-
-`--target cost` or `--target time` retrains just one of the two models.
-Retrain any time the underlying data changes -- `train.py` is deterministic
-given the same CSV (`RANDOM_STATE` in `app/overrun/config.py`).
-
-Both artifacts are fitted offline and reused at inference time; the API
-never retrains anything per request.
-
-### 1c. Overrun-risk classification
-
-The two ensemble artifacts under `models/classification/` are shipped
-pre-trained. To retrain either one, run the offline scripts directly (they
-have no local-package imports, so they run standalone):
-
-```bash
-python -m app.classification.training.train_cost_v4
-python -m app.classification.training.train_time_model
-```
-
-Both classification trainers now default to the repository's
-`data/paiman_projects_landmark_dataset.csv` and write directly to
-`models/classification/`. Override those paths with
-`CLASSIFICATION_DATA_PATH`, `CLASSIFICATION_COST_MODEL_PATH`, or
-`CLASSIFICATION_TIME_MODEL_PATH` when needed.
-
-**One shared `models/` root.** All three services now write their trained
-artifacts under a single top-level `models/` directory instead of separate
-folders per service -- no manual moving of files after training:
-```
-models/
-├── anomaly_model.joblib                            # anomaly (1a)
-├── final_cost_overrun_pct_combined_model.pkl      # overrun (1b)
-├── final_time_overrun_pct_combined_model.pkl      # overrun (1b)
-├── cost_overrun_feature_schema.json               # overrun (1b)
-├── time_overrun_feature_schema.json               # overrun (1b)
-└── classification/
-    ├── paiman_cost_overrun_ensemble.joblib        # classification (1c)
-    └── paiman_time_overrun_ensemble.joblib        # classification (1c)
-```
-Every training script resolves default paths from the repository root and
-creates the destination directory automatically. Running training from a
-different current directory no longer changes where data is read or models
-are written.
-
-## 2. Start the API
+Open a terminal in the project root and run:
 
 ```bash
 python -m uvicorn app.main:app --host 0.0.0.0 --port 8000
 ```
 
-Or:
+This starts the FastAPI server locally at `http://localhost:8000`. Leave this terminal running.
+
+## Step 5: Start the frontend — Terminal 2
+
+Open a **second** terminal, navigate into the `frontend` folder, and run the following three commands in order:
 
 ```bash
-docker build -t paimana-combined-api .
-docker run --rm -p 8000:8000 paimana-combined-api
+npm install
+npm run build
+npm run dev
 ```
 
-The repository's `models/` directory is copied into the image, so the
-container uses the same paths as local inference. To deploy a refreshed set
-of models without rebuilding the image, bind-mount the repository models
-directory over `/service/models`.
+- `npm install` — installs all frontend dependencies
+- `npm run build` — creates a production build
+- `npm run dev` — starts the local development server
 
-Startup fails fast (with a clear `RuntimeError`) if any service's artifact
-is missing, rather than silently starting and returning 503s from every
-prediction endpoint until someone notices.
+## Step 6: Open the website
 
-Swagger/OpenAPI: `http://localhost:8000/docs`
+Once both terminals are running:
 
-### `GET /health`
-Aggregate status across all three services:
-```json
-{
-  "status": "ok",
-  "services": {
-    "overrun_risk_classification": {"model_loaded": true},
-    "cost_time_overrun": {"model_loaded": true},
-    "anomaly_detection": {"model_loaded": true}
-  }
-}
-```
-Each service also has its own `/classification/health` / `/overrun/health` /
-`/anomaly/health`.
+- **Frontend:** the URL printed by `npm run dev` (typically `http://localhost:5173`)
+- **Backend API docs:** `http://localhost:8000/docs`
 
----
+## Stopping the app
 
-## 3. Overrun-risk classification -- `/classification/*`
+Press `Ctrl + C` in each terminal to stop the backend and frontend servers.
 
-**The single entry point for the whole pipeline.** Every endpoint here
-takes the same raw, prediction-time schema as `/overrun/*` and
-`/anomaly/*` (see `GET /classification/schema`) -- every engineered
-feature is derived internally, and the caller supplies each project's data
-exactly once. Internally, this classifies overrun risk, then
-automatically runs the regression (`/overrun`) and anomaly-detection
-(`/anomaly`) services on the same data, gated on the classifier's own
-predicted probability (> 0.5 by default).
+## Troubleshooting
 
-### `GET /classification/health`
-Model version, the 0.5 risk-gating threshold, and which target each loaded
-model predicts.
-
-### `POST /classification/predict/batch`
-A bare JSON array of raw rows for one or more projects, grouped by
-`project_code` internally (a project_code repeated across rows is always
-treated as that project's history -- there is no `include_history`
-toggle). `preferred_model` is an optional query parameter (defaults to
-`model_b`):
-```json
-[
-  {"project_code": "P001", "reporting_quarter": "Q1", "financial_year": "2023-24", "sector": "RAILWAYS", "...": "..."},
-  {"project_code": "P001", "reporting_quarter": "Q2", "financial_year": "2023-24", "...": "next quarter"},
-  {"project_code": "P002", "...": "a second project's raw row"}
-]
-```
-Response: `predictions`, one entry per project, each with `classification`
-(probability + label + SHAP reason per target), `risk_gate` (the threshold
-decision), and `overrun`/`anomaly` -- each of which carries the **latest**
-quarter's result at the top level AND a `quarterly` list, one entry per
-row received for that project tagged with `reporting_period_date`, so a
-caller can plot a time-trend graph. `quarterly` is empty when
-regression/anomaly was skipped by the risk gate.
-
-### `POST /classification/predict/csv`
-Same raw-schema rows via CSV upload (`multipart/form-data`, field `file`).
-Same response shape as `/predict/batch`.
-
-### `POST /classification/predict`
-A bare JSON array with **exactly one** project row (422 if you send more
-than one -- use `/predict/batch` instead):
-```json
-[
-  {"project_code": "P001", "reporting_quarter": "Q1", "financial_year": "2023-24", "sector": "RAILWAYS", "...": "..."}
-]
-```
-Returns that one project's entry directly (not wrapped in `predictions`).
-
----
-
-## 4. Anomaly detection -- `/anomaly/*`
-
-**Every endpoint takes only the fields actually available when a quarterly
-report comes in** -- not the full engineered schema the model was trained
-on. `app/anomaly/raw_features.py` derives every engineered feature
-internally; callers never precompute anything.
-
-Required raw fields, per row:
-```
-project_code, agency_name, sector, state, reporting_quarter,
-financial_year, original_cost_rs_cr, anticipated_cost_rs_cr,
-cumulative_expenditure_rs_cr, approval_date,
-original_commissioning_date, anticipated_commissioning_date
-```
-Optional (omit entirely and nothing errors -- they just come back as
-`null`/unused): `project_name`, `project_status`, `revised_cost_rs_cr`,
-`revised_commissioning_date`.
-
-For longitudinal scoring, send multiple quarterly rows for the same
-`project_code` in one request:
-- **3+ observations for a project → Track A** (longitudinal scoring)
-- **1-2 observations → Track B** (short-history peer/data-quality scoring)
-
-### `GET /anomaly/model-info`
-Model version, fit cutoff, feature families, and the raw input schema.
-
-### `POST /anomaly/predict/batch`
-A bare JSON array of raw rows:
-```json
-[
-  {"project_code":"P001","project_name":"...","agency_name":"...","sector":"...",
-   "state":"...","project_status":"Ongoing","reporting_quarter":"Q1","financial_year":"2023-24",
-   "original_cost_rs_cr":200.0,"anticipated_cost_rs_cr":210.0,"cumulative_expenditure_rs_cr":20.0,
-   "approval_date":"2020-04-01","original_commissioning_date":"2024-03-31",
-   "anticipated_commissioning_date":"2024-06-30"},
-  {"project_code":"P001", "reporting_quarter":"Q2", "...":"same shape, next quarter"},
-  {"project_code":"P002", "...":"a second project's raw row"}
-]
-```
-Response: one entry per project, always including both `latest_prediction`
-(project_name, project_code, anomaly_score, risk_level, anomaly_reason --
-"The project is fine." when risk_level is "Normal") AND
-`quarterly_predictions` -- the same shape for every scored quarter, tagged
-with `reporting_period_date`, so a caller can plot a time-trend graph.
-There is no `include_history` toggle -- a project's multiple rows are
-always treated as its history, and every scored quarter is always
-returned.
-
-```json
-{
-  "model_version": "...",
-  "projects_received": 2,
-  "rows_received": 4,
-  "rows_scored": 4,
-  "projects": [
-    {"project_code": "P001", "history_rows_received": 2,
-     "latest_prediction": {"project_name": "...", "project_code": "P001",
-                            "anomaly_score": 0.12, "risk_level": "Normal",
-                            "anomaly_reason": "The project is fine."},
-     "quarterly_predictions": [
-       {"project_name": "...", "project_code": "P001", "anomaly_score": 0.05,
-        "risk_level": "Normal", "anomaly_reason": "The project is fine.",
-        "reporting_period_date": "2023-06-30"},
-       {"project_name": "...", "project_code": "P001", "anomaly_score": 0.12,
-        "risk_level": "Normal", "anomaly_reason": "The project is fine.",
-        "reporting_period_date": "2023-09-30"}
-     ]}
-  ]
-}
-```
-
-### `POST /anomaly/predict/csv`
-Same raw-schema rows, uploaded as a CSV file (`multipart/form-data`, field
-`file`). Same response shape as `/predict/batch` above (grouped by
-project, each with `latest_prediction` and `quarterly_predictions`).
-Capped at `MAX_CSV_UPLOAD_BYTES` (default 25 MB) -- read in chunks so an
-oversized upload is rejected before being fully buffered into memory.
-
----
-
-## 5. Cost/time overrun regression -- `/overrun/*`
-
-Predicts `final_cost_overrun_pct` and `final_time_overrun_pct` **magnitude**
-using two separate models (`CombinedOverrunPipeline` instances, one per
-target).
-
-**Every endpoint takes only the same raw, prediction-time fields the
-anomaly-detection service takes** -- not the engineered landmark-dataset
-schema either model was trained on. `app/common/raw_features.py` (shared
-with `/anomaly/*`; see its module docstring) derives every engineered
-feature -- `reporting_period_date`, `expenditure_to_cost_pct`,
-`project_age_at_report_months`, `planned_duration_months`, `progress_ratio`,
-`landmark_index`, `n_landmarks_total`, `horizon_months`, and the
-contemporaneous-overrun deltas -- internally; callers never precompute or
-supply any of it. Required raw fields, per row:
-```
-project_code, agency_name, sector, state, reporting_quarter,
-financial_year, original_cost_rs_cr, anticipated_cost_rs_cr,
-cumulative_expenditure_rs_cr, approval_date,
-original_commissioning_date, anticipated_commissioning_date
-```
-Optional (omit entirely and nothing errors): `project_name`,
-`project_status`, `revised_cost_rs_cr`, `revised_commissioning_date`.
-
-`GET /overrun/schema` returns this same required/optional list plus an
-example row, and which sector each model's Model B targets.
-
-Every prediction block has this shape:
-```json
-{"predicted_overrun_pct": 41.32, "model_b_prediction": 41.32,
- "final_model_prediction": 40.6, "preferred_model": "model_b"}
-```
-`preferred_model` (`"model_b"` or `"final_model"`) selects which ensemble's
-value is surfaced as `predicted_overrun_pct`; both are always included.
-
-### `POST /overrun/predict` -- exactly ONE project row
-Standalone regression: always predicts both targets, no classifier gating
-(that gating lives in `/classification/predict`, which calls this same
-regression internally). A bare JSON array with **exactly one** row (422 if
-you send more than one -- use `/predict/batch` instead). `preferred_model`
-is an optional query parameter:
-```json
-[
-  {
-    "project_code": "P001", "project_name": "Doubling of XYZ Rail Line",
-    "agency_name": "Ministry of Railways", "sector": "RAILWAYS",
-    "state": "MAHARASHTRA", "project_status": "Ongoing",
-    "reporting_quarter": "Q1", "financial_year": "2023-24",
-    "original_cost_rs_cr": 200.0, "anticipated_cost_rs_cr": 210.0,
-    "cumulative_expenditure_rs_cr": 20.0, "approval_date": "2020-04-01",
-    "original_commissioning_date": "2024-03-31",
-    "anticipated_commissioning_date": "2024-06-30"
-  }
-]
-```
-
-### `POST /overrun/predict/batch`
-Bulk equivalent, mirroring the anomaly-detection service's `/predict/batch`
-contract: a bare JSON array of raw rows for one or more projects, grouped
-by `project_code` internally (never gated by a classifier -- both targets
-always run). `preferred_model` is an optional query parameter:
-```json
-[
-  {"project_code": "P001", "reporting_quarter": "Q1", "financial_year": "2023-24", "sector": "RAILWAYS", "...": "..."},
-  {"project_code": "P001", "reporting_quarter": "Q2", "financial_year": "2023-24", "...": "next quarter"},
-  {"project_code": "P002", "...": "a second project's raw row"}
-]
-```
-Response: always includes both `latest_prediction` AND
-`quarterly_predictions` -- the same shape for every supplied quarter,
-tagged with `reporting_period_date` (the derived date, not something the
-caller supplies), so a caller can plot a time-trend graph. There is no
-`include_history` toggle.
-```json
-{
-  "model_version": "...",
-  "preferred_model": "model_b",
-  "projects_received": 2,
-  "rows_received": 3,
-  "rows_scored": 3,
-  "projects": [
-    {"project_code": "P001", "history_rows_received": 2,
-     "latest_prediction": {"project_code": "P001",
-                            "cost_overrun": {"predicted_overrun_pct": 41.32, "...": "..."},
-                            "time_overrun": {"predicted_overrun_pct": 12.05, "...": "..."}},
-     "quarterly_predictions": [
-       {"project_code": "P001", "reporting_period_date": "2023-06-30",
-        "cost_overrun": {"predicted_overrun_pct": 30.1, "...": "..."},
-        "time_overrun": {"predicted_overrun_pct": 8.4, "...": "..."}},
-       {"project_code": "P001", "reporting_period_date": "2023-09-30",
-        "cost_overrun": {"predicted_overrun_pct": 41.32, "...": "..."},
-        "time_overrun": {"predicted_overrun_pct": 12.05, "...": "..."}}
-     ]}
-  ]
-}
-```
-
-### `POST /overrun/predict/csv`
-Same raw-schema rows via CSV upload (`multipart/form-data`, field `file`).
-`preferred_model` is a query parameter here instead of a body field; same
-response shape as `/predict/batch` (always `latest_prediction` +
-`quarterly_predictions`). Same 25 MB chunked-read upload cap as the
-anomaly service.
-
----
-
-## 6. Gated pipeline -- `POST /gateway/predict`
-
-`/gateway/*` is now a thin, backward-compatible alias for
-`/classification/predict` and `/classification/predict/batch` -- it
-delegates to the exact same pipeline (`app.classification.pipeline`), so
-see section 3 above for the request/response shape. New callers should
-prefer `/classification/*` directly.
-
-Response shape (single project):
-```json
-{
-  "project_code": "P001",
-  "classification": {"cost_overrun": {"probability": 0.31, "...": "..."},
-                      "time_overrun": {"probability": 0.23, "...": "..."}},
-  "risk_gate": {"threshold": 0.5, "cost_overrun_risk": false,
-                "time_overrun_risk": false, "any_overrun_risk": false},
-  "overrun": {"cost_overrun": {"reason": "Not flagged as cost-overrun risk by classifier (probability <= 0.5) - regression skipped", "...": "..."},
-              "time_overrun": {"...": "..."}, "quarterly": []},
-  "anomaly": {"anomaly_reason": "Not flagged as overrun risk by classifier (probability <= 0.5) - anomaly detection skipped", "...": "...", "quarterly": []}
-}
-```
-When `risk_gate.any_overrun_risk` is `true`, `overrun` and `anomaly` contain
-real predictions (plus a non-empty `quarterly` trend list) instead of the
-skipped placeholders shown above.
-
-`GET /gateway/config` returns the current threshold.
-
----
-
-## 7. GenAI project summary -- `/summary/*`
-
-Turns prediction output into a short, human-readable project summary using LangChain + LangGraph with Google Gemini as the primary provider and Hugging Face-hosted Qwen as the fallback. The primary model defaults to `gemini-2.5-flash`; the Qwen fallback is configurable.
-
-### Setup
-
-1. Set `GOOGLE_API_KEY` in `.env` for the primary Gemini model.
-2. Optionally set `HUGGINGFACEHUB_API_TOKEN` to enable the Qwen fallback.
-3. Start the backend normally with `uvicorn app.main:app --host 0.0.0.0 --port 8000`.
-
-Without either credential, the prediction services still work and the GenAI endpoints return HTTP 503.
-
-Optional overrides:
-
-| Env var | Default | Purpose |
-|---|---|---|
-| `SUMMARY_GEMINI_MODEL_ID` | `gemini-2.5-flash` | Primary GenAI model |
-| `SUMMARY_QWEN_MODEL_ID` | `Qwen/Qwen3.8-27B` | Hugging Face fallback model |
-| `SUMMARY_MAX_NEW_TOKENS` | `350` | Maximum summary output tokens |
-| `SUMMARY_TEMPERATURE` | `0.2` | Generation temperature |
-| `SUMMARY_REQUEST_TIMEOUT_SECONDS` | `30` | Per-model timeout |
-| `SUMMARY_MAX_BATCH_PROJECTS` | `25` | Maximum projects per GenAI batch |
-
-### `GET /summary/health`
-
-Reports whether the OpenRouter key is configured, the primary model, and the fallback model list. It does not call the LLM.
-
-### `GET /summary/schema`
-
-Returns the exact request examples for both GenAI endpoints.
-
-### `POST /summary/generate`
-
-Body:
-
-```json
-{
-  "prediction": {
-    "project_code": "P001",
-    "classification": {
-      "cost_overrun": {"prediction": "Overrun Risk", "probability": 0.76, "reason": "Anticipated cost is above the original cost."},
-      "time_overrun": {"prediction": "Overrun Risk", "probability": 0.68, "reason": "Anticipated commissioning date has moved later."}
-    },
-    "risk_gate": {"cost_overrun_risk": true, "time_overrun_risk": true, "any_overrun_risk": true},
-    "overrun": {},
-    "anomaly": {"risk_level": "Review", "anomaly_score": 0.61, "anomaly_reason": "Reporting trend changed materially."}
-  },
-  "project_name": "Doubling of XYZ Rail Line"
-}
-```
-
-### `POST /summary/generate/batch`
-
-Body:
-
-```json
-{
-  "predictions": [
-    {"project_code": "P001", "classification": {}, "overrun": {}, "anomaly": {}},
-    {"project_code": "P002", "classification": {}, "overrun": {}, "anomaly": {}}
-  ]
-}
-```
-
-The batch endpoint makes one graph invocation per project and automatically falls through the configured model list when a model fails or is unavailable.
-
-### GenAI provider note
-
-The summary service uses Google Gemini first and falls back to Hugging Face-hosted Qwen when the primary provider is unavailable, rate-limited, or otherwise fails with a retryable upstream error.
-
----
-## Error handling & logging
-
-Shared across both services (`app/common/http.py`). Every error response --
-a manually raised `HTTPException`, a Pydantic validation failure, or an
-unexpected server error -- shares the same JSON shape:
-```json
-{"detail": "...", "request_id": "..."}
-```
-`request_id` always matches the `X-Request-Id` response header. A caller may
-supply their own `X-Request-Id` request header, echoed back verbatim.
-
-Every request is logged (method, path, status, latency, request ID) at INFO
-level by the `paimana.api` logger. Set `LOG_LEVEL` (default `INFO`) to
-change verbosity. Request/response bodies are never logged.
-
-Row-level input validation for both `/predict/batch` endpoints runs at the
-API boundary, before pandas ever sees the data (`app/common/schemas.py`):
-every row must be a non-empty flat mapping of column name to a plain
-string/number/boolean/null value -- a nested object or array is rejected
-with a 422 naming the row index and field.
-
-## Deployment notes
-
-1. Pin the Python/dependency versions used to benchmark each model.
-2. Build both artifacts once offline; never fit models inside request handlers.
-3. Keep each artifact and its API model version together.
-4. Put authentication/rate limiting/API gateway controls in front of the service.
-5. `/predict/csv` uploads (both services) are capped at `MAX_CSV_UPLOAD_BYTES`
-   (default 25 MB, overridable via env var) to avoid buffering an unbounded
-   file into memory before validation runs.
-6. Environment variables of note: `LOG_LEVEL`, `MAX_CSV_UPLOAD_BYTES`,
-   `ANOMALY_MODEL_ARTIFACT` (default `models/anomaly_model.joblib`), `DATA_DIR`,
-   `MODEL_DIR` (overrun models, default `./models`), `OVERRUN_RAW_DATA_PATH`,
-   `DEFAULT_PREFERRED_MODEL` (`model_b` or `final_model`, default `model_b`).
+- **Frontend can't reach the backend:** confirm the backend terminal is still running and that `VITE_API_BASE_URL` in `frontend/.env` matches the backend's address.
+- **Missing API keys:** GenAI/summary endpoints return `503` if `GOOGLE_API_KEY` (and optionally `HUGGINGFACEHUB_API_TOKEN`) aren't set in the root `.env`; other endpoints still work without them.
+- **Port already in use:** change `--port 8000` to a free port in Step 4, and update `VITE_API_BASE_URL` accordingly.
