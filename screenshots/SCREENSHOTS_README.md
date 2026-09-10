@@ -44,9 +44,6 @@ A visual walkthrough of the NIRMAAN project-monitoring platform: login and dashb
 
 ![Progress ratio and expenditure](progress-ratio-expenditure-cost.png)
 
-**Annual anticipated cost trend**
-
-![Annual anticipated cost](annual-anticipated-cost-2.png)
 
 ---
 
@@ -76,6 +73,13 @@ A visual walkthrough of the NIRMAAN project-monitoring platform: login and dashb
 
 ![Project result detail](project-result-detail.png)
 
+
+**THE ABOUT PAGE**
+
+![Project result detail](about1.png)
+![Project result detail](about2.png)
+
+
 ---
 
 ## Folder Structure for Screenshots
@@ -91,10 +95,11 @@ assets/
     ├── quarter-reporting-sector-cost.png
     ├── cost-expenditure-chart.png
     ├── progress-ratio-expenditure-cost.png
-    ├── annual-anticipated-cost-2.png
     ├── project-detail-history.png
     ├── project-information-form.png
     ├── risk-assessment-genai-summary.png
     ├── risk-distribution-quarterly-trend.png
     └── project-result-detail.png
+    |__ about1.png
+    |__ about2.png
 ```
