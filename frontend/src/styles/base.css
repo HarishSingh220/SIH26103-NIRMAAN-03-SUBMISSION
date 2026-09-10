@@ -1,0 +1,312 @@
+@import "./nirmaan-tokens.css";
+
+/* ---------- Reset & base ---------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--nirmaan-page-bg);
+  color: var(--nirmaan-text);
+}
+
+#root {
+  text-align: left;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--sans);
+  font-weight: 600;
+  letter-spacing: normal;
+  color: var(--nirmaan-text);
+}
+
+p {
+  color: var(--nirmaan-muted);
+  line-height: 1.55;
+}
+
+/* ---------- Buttons ---------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font: inherit;
+  font-size: var(--nirmaan-fs-small);
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: var(--nirmaan-radius-sm);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--nirmaan-blue);
+  outline-offset: 2px;
+}
+
+.btn-primary {
+  background: var(--nirmaan-blue);
+  border-color: var(--nirmaan-blue);
+  color: #fff;
+}
+.btn-primary:hover {
+  background: var(--nirmaan-blue-deep, #2c40c9);
+}
+
+.btn-secondary {
+  background: var(--nirmaan-panel);
+  border-color: var(--nirmaan-border-strong);
+  color: var(--nirmaan-text);
+}
+.btn-secondary:hover {
+  border-color: var(--nirmaan-blue);
+  color: var(--nirmaan-blue);
+}
+
+.btn-ghost {
+  background: var(--nirmaan-panel-sunken);
+  border-color: var(--nirmaan-border);
+  color: var(--nirmaan-blue);
+}
+.btn-ghost:hover {
+  background: var(--nirmaan-blue-soft);
+}
+
+.btn-sm {
+  padding: 5px 10px;
+  font-size: var(--nirmaan-fs-micro);
+}
+
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* ---------- Card ---------- */
+
+.card {
+  background: var(--nirmaan-panel);
+  border: 1px solid var(--nirmaan-border);
+  border-radius: var(--nirmaan-radius-md);
+  box-shadow: var(--nirmaan-shadow-sm);
+}
+
+/* ---------- Badges / status indicators ---------- */
+/* Use for risk level, project status, or any short tag. */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--nirmaan-fs-micro);
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 999px;
+  line-height: 1.6;
+  white-space: nowrap;
+}
+
+.badge::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+}
+
+.badge-high {
+  color: var(--nirmaan-risk-high);
+  background: var(--nirmaan-risk-high-bg);
+}
+.badge-medium {
+  color: var(--nirmaan-risk-medium);
+  background: var(--nirmaan-risk-medium-bg);
+}
+.badge-low {
+  color: var(--nirmaan-risk-low);
+  background: var(--nirmaan-risk-low-bg);
+}
+.badge-neutral {
+  color: var(--nirmaan-reporting);
+  background: var(--nirmaan-reporting-bg);
+}
+
+/* ---------- Alerts ---------- */
+
+.alert {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 12px 14px;
+  border-radius: var(--nirmaan-radius-sm);
+  border: 1px solid transparent;
+  font-size: var(--nirmaan-fs-small);
+}
+
+.alert-info {
+  background: var(--nirmaan-blue-soft);
+  border-color: rgba(61, 90, 254, 0.25);
+  color: var(--nirmaan-text);
+}
+.alert-danger {
+  background: var(--nirmaan-risk-high-bg);
+  border-color: rgba(194, 59, 59, 0.25);
+  color: var(--nirmaan-risk-high);
+}
+.alert-warning {
+  background: var(--nirmaan-risk-medium-bg);
+  border-color: rgba(181, 121, 10, 0.25);
+  color: var(--nirmaan-risk-medium);
+}
+.alert-success {
+  background: var(--nirmaan-risk-low-bg);
+  border-color: rgba(26, 143, 92, 0.25);
+  color: var(--nirmaan-risk-low);
+}
+
+/* ---------- Tables ---------- */
+/* Apply the .data-table class to any <table> — headers, rules and
+   numeric alignment are handled here so every table in the app matches. */
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--nirmaan-fs-small);
+}
+
+.data-table th {
+  text-align: left;
+  font-size: var(--nirmaan-fs-micro);
+  font-weight: 600;
+  color: var(--nirmaan-muted);
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--nirmaan-border-strong);
+  white-space: nowrap;
+}
+
+.data-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--nirmaan-border);
+  color: var(--nirmaan-text);
+  vertical-align: middle;
+}
+
+.data-table tbody tr:hover {
+  background: var(--nirmaan-panel-sunken);
+}
+
+.data-table td.numeric,
+.data-table th.numeric {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Forms ---------- */
+
+label {
+  font-size: var(--nirmaan-fs-small);
+  color: var(--nirmaan-text);
+}
+
+input[type="text"],
+input[type="search"],
+input[type="number"],
+input[type="date"],
+input[type="email"],
+input[type="password"],
+select,
+textarea {
+  font: inherit;
+  font-size: var(--nirmaan-fs-small);
+  color: var(--nirmaan-text);
+  background: var(--nirmaan-panel);
+  border: 1px solid var(--nirmaan-border-strong);
+  border-radius: var(--nirmaan-radius-sm);
+  padding: 8px 10px;
+  width: 100%;
+}
+
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: none;
+  border-color: var(--nirmaan-blue);
+  box-shadow: 0 0 0 3px var(--nirmaan-blue-soft);
+}
+
+select {
+  cursor: pointer;
+}
+
+/* ---------- Modal ---------- */
+/* Ready-made shell for whenever a modal/dialog is added. */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 17, 23, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--nirmaan-sp-4);
+  z-index: 100;
+}
+
+.modal {
+  width: 100%;
+  max-width: 480px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: var(--nirmaan-panel);
+  border-radius: var(--nirmaan-radius-md);
+  border: 1px solid var(--nirmaan-border);
+  box-shadow: var(--nirmaan-shadow-md);
+}
+
+.modal-header {
+  padding: var(--nirmaan-sp-4) var(--nirmaan-sp-5);
+  border-bottom: 1px solid var(--nirmaan-border);
+}
+
+.modal-header h2 {
+  font-size: var(--nirmaan-fs-h2);
+  margin: 0;
+}
+
+.modal-body {
+  padding: var(--nirmaan-sp-5);
+  font-size: var(--nirmaan-fs-small);
+  color: var(--nirmaan-muted);
+}
+
+.modal-footer {
+  padding: var(--nirmaan-sp-4) var(--nirmaan-sp-5);
+  border-top: 1px solid var(--nirmaan-border);
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* ---------- Chart / prediction placeholders ---------- */
+
+.chart-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 180px;
+  border: 1px dashed var(--nirmaan-border-strong);
+  border-radius: var(--nirmaan-radius-sm);
+  background: var(--nirmaan-panel-sunken);
+  color: var(--nirmaan-faint);
+  font-size: var(--nirmaan-fs-small);
+}

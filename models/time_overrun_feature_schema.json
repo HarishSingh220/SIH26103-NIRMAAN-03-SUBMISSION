@@ -1,0 +1,135 @@
+{
+  "target": "final_time_overrun_pct",
+  "target_scope": "resolved, strictly positive overruns only",
+  "required_raw_input_columns": [
+    "project_code",
+    "reporting_period_date",
+    "project_name",
+    "sector",
+    "state",
+    "agency_name",
+    "quarter",
+    "financial_year",
+    "original_cost_rs_cr",
+    "cumulative_expenditure_rs_cr",
+    "expenditure_to_cost_pct",
+    "project_age_at_report_months",
+    "planned_duration_months",
+    "progress_ratio",
+    "landmark_index",
+    "n_landmarks_total",
+    "horizon_months"
+  ],
+  "models": {
+    "model_b": {
+      "description": "XGBoost+LightGBM+CatBoost SLSQP ensemble with a 'ROAD TRANSPORT AND HIGHWAYS' sector interaction block.",
+      "sector": "ROAD TRANSPORT AND HIGHWAYS",
+      "numerical_features": [
+        "original_cost_rs_cr",
+        "cumulative_expenditure_rs_cr",
+        "expenditure_to_cost_pct",
+        "project_age_at_report_months",
+        "planned_duration_months",
+        "progress_ratio",
+        "landmark_index",
+        "n_landmarks_total",
+        "horizon_months",
+        "landmark_completion_ratio",
+        "remaining_landmarks",
+        "expenditure_per_landmark_rs_cr",
+        "cost_per_landmark_planned_rs_cr",
+        "expenditure_progress_gap",
+        "horizon_to_planned_ratio",
+        "fy_start_year",
+        "quarter_num",
+        "expenditure_velocity",
+        "expenditure_acceleration",
+        "progress_velocity",
+        "progress_acceleration",
+        "rolling_expenditure_mean",
+        "rolling_expenditure_std",
+        "rolling_progress_mean",
+        "rolling_progress_std",
+        "state_was_missing",
+        "agency_name_was_missing",
+        "cumulative_expenditure_rs_cr_was_missing",
+        "expenditure_to_cost_pct_was_missing",
+        "project_age_at_report_months_was_missing",
+        "planned_duration_months_was_missing",
+        "road_transport_and_highways_flag",
+        "road_transport_and_highways_expenditure_gap",
+        "road_transport_and_highways_maturity",
+        "road_transport_and_highways_expenditure_velocity",
+        "road_transport_and_highways_progress_velocity"
+      ],
+      "categorical_features": [
+        "sector",
+        "state",
+        "agency_name"
+      ],
+      "ensemble_weights": {
+        "xgboost": 0.20885331311004524,
+        "lightgbm": 0.2766240650362391,
+        "catboost": 0.5145226218537158
+      },
+      "test_metrics": {
+        "MAE": 22.923534226933565,
+        "RMSE": 91.17652827175844,
+        "R2": 0.8964206208177464
+      },
+      "output_field": "predicted_final_time_overrun_pct_model_b"
+    },
+    "final_model": {
+      "description": "XGBoost+LightGBM+CatBoost SLSQP ensemble on the full feature set, no interaction features.",
+      "numerical_features": [
+        "original_cost_rs_cr",
+        "cumulative_expenditure_rs_cr",
+        "expenditure_to_cost_pct",
+        "project_age_at_report_months",
+        "planned_duration_months",
+        "progress_ratio",
+        "landmark_index",
+        "n_landmarks_total",
+        "horizon_months",
+        "landmark_completion_ratio",
+        "remaining_landmarks",
+        "expenditure_per_landmark_rs_cr",
+        "cost_per_landmark_planned_rs_cr",
+        "expenditure_progress_gap",
+        "horizon_to_planned_ratio",
+        "fy_start_year",
+        "quarter_num",
+        "expenditure_velocity",
+        "expenditure_acceleration",
+        "progress_velocity",
+        "progress_acceleration",
+        "rolling_expenditure_mean",
+        "rolling_expenditure_std",
+        "rolling_progress_mean",
+        "rolling_progress_std",
+        "state_was_missing",
+        "agency_name_was_missing",
+        "cumulative_expenditure_rs_cr_was_missing",
+        "expenditure_to_cost_pct_was_missing",
+        "project_age_at_report_months_was_missing",
+        "planned_duration_months_was_missing"
+      ],
+      "categorical_features": [
+        "sector",
+        "state",
+        "agency_name"
+      ],
+      "ensemble_weights": {
+        "xgboost": 0.26362846525767597,
+        "lightgbm": 0.17078370929909029,
+        "catboost": 0.5655878254432337
+      },
+      "test_metrics": {
+        "MAE": 22.261885323063684,
+        "RMSE": 77.3957031379016,
+        "R2": 0.9253652811989662
+      },
+      "output_field": "predicted_final_time_overrun_pct_final_model"
+    }
+  }
+}

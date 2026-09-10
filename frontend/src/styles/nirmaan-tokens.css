@@ -1,0 +1,67 @@
+/* NIRMAAN design system — shared visual tokens */
+:root {
+  /* Government / infrastructure palette */
+  --nirmaan-ink: #081a2b;
+  --nirmaan-navy: #0b2138;
+  --nirmaan-navy-2: #102d49;
+  --nirmaan-navy-3: #163b5d;
+  --nirmaan-blue: #2f63a3;
+  --nirmaan-blue-deep: #214d7f;
+  --nirmaan-blue-soft: #eaf1f8;
+  --nirmaan-blue-line: #c9d9e8;
+
+  --nirmaan-saffron: #e98222;
+  --nirmaan-saffron-soft: #fff2e5;
+  --nirmaan-green: #2b8a57;
+  --nirmaan-green-soft: #eaf6ef;
+  --nirmaan-white-accent: #f4f7f9;
+
+  --nirmaan-page-bg: #eef2f6;
+  --nirmaan-panel: #ffffff;
+  --nirmaan-panel-sunken: #f6f8fa;
+  --nirmaan-border: #dce3ea;
+  --nirmaan-border-strong: #c7d2dd;
+  --nirmaan-text: #13283b;
+  --nirmaan-muted: #647487;
+  --nirmaan-faint: #8b9aaa;
+
+  --nirmaan-on-track: #287d50;
+  --nirmaan-on-track-bg: #eaf6ef;
+  --nirmaan-minor: #a96b13;
+  --nirmaan-minor-bg: #fff4df;
+  --nirmaan-risk: #b84040;
+  --nirmaan-risk-bg: #fbeceb;
+  --nirmaan-reporting: #687789;
+  --nirmaan-reporting-bg: #edf0f3;
+  --nirmaan-mega: #9b6515;
+  --nirmaan-mega-bg: #fff3dd;
+
+  --nirmaan-risk-high: var(--nirmaan-risk);
+  --nirmaan-risk-high-bg: var(--nirmaan-risk-bg);
+  --nirmaan-risk-medium: var(--nirmaan-minor);
+  --nirmaan-risk-medium-bg: var(--nirmaan-minor-bg);
+  --nirmaan-risk-low: var(--nirmaan-on-track);
+  --nirmaan-risk-low-bg: var(--nirmaan-on-track-bg);
+
+  /* Typography */
+  --nirmaan-fs-h1: 24px;
+  --nirmaan-fs-h2: 16px;
+  --nirmaan-fs-body: 14px;
+  --nirmaan-fs-small: 12.5px;
+  --nirmaan-fs-micro: 11px;
+
+  /* Spacing */
+  --nirmaan-sp-1: 4px;
+  --nirmaan-sp-2: 8px;
+  --nirmaan-sp-3: 12px;
+  --nirmaan-sp-4: 16px;
+  --nirmaan-sp-5: 24px;
+  --nirmaan-sp-6: 32px;
+
+  /* Shape / elevation */
+  --nirmaan-radius-sm: 6px;
+  --nirmaan-radius-md: 10px;
+  --nirmaan-radius-lg: 14px;
+  --nirmaan-shadow-sm: 0 1px 3px rgba(8, 26, 43, 0.06);
+  --nirmaan-shadow-md: 0 5px 16px rgba(8, 26, 43, 0.08);
+}

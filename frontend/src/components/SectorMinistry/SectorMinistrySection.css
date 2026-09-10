@@ -1,0 +1,16 @@
+.sm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--nirmaan-sp-4); }
+.sm-panel { margin-top: 0; }
+.sm-list { list-style: none; margin: 0; padding: 0; max-height: 280px; overflow-y: auto; border-top: 1px solid var(--nirmaan-border); }
+.sm-list::-webkit-scrollbar { width: 6px; }
+.sm-list::-webkit-scrollbar-thumb { background: var(--nirmaan-border-strong); border-radius: 3px; }
+.sm-row { display: grid; grid-template-columns: 1fr 90px 92px; align-items: center; gap: 12px; padding: 10px 4px; border-bottom: 1px solid var(--nirmaan-border); }
+.sm-row:last-child { border-bottom: none; }
+.sm-name { font-size: 13.5px; font-weight: 550; color: var(--nirmaan-text); line-height: 1.3; }
+.sm-bar-track { height: 6px; border-radius: 3px; background: #e8edf2; overflow: hidden; }
+.sm-bar-fill { display: block; height: 100%; border-radius: 3px; }
+.sm-bar-fill--sector { background: var(--nirmaan-blue); }
+.sm-bar-fill--ministry { background: var(--nirmaan-saffron); }
+.sm-count { font-size: 12.5px; font-weight: 650; text-align: right; white-space: nowrap; color: var(--nirmaan-text); font-variant-numeric: tabular-nums; }
+.sm-count small { font-weight: 400; color: var(--nirmaan-faint); font-size: 11px; }
+@media (max-width: 900px) { .sm-grid { grid-template-columns: 1fr; } }
+@media (max-width: 480px) { .sm-row { grid-template-columns: 1fr 70px; } .sm-bar-track { display: none; } }

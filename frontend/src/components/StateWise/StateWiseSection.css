@@ -1,0 +1,27 @@
+.state-search { display: flex; align-items: center; gap: 8px; height: 38px; padding: 0 13px; border: 1px solid var(--nirmaan-border); border-radius: 7px; background: var(--nirmaan-panel-sunken); color: var(--nirmaan-faint); flex-shrink: 0; }
+.state-search input { border: none; background: transparent; outline: none; font: inherit; font-size: 13px; color: var(--nirmaan-text); width: 200px; }
+.state-search input::placeholder { color: var(--nirmaan-faint); }
+.state-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; border-top: 1px solid var(--nirmaan-border); }
+.state-row { border-bottom: 1px solid var(--nirmaan-border); }
+.state-row-main { width: 100%; display: grid; grid-template-columns: 28px 1fr 140px 110px 96px 20px; align-items: center; gap: 16px; padding: 12px 4px; background: none; border: none; cursor: pointer; text-align: left; font: inherit; color: var(--nirmaan-text); }
+.state-row:hover .state-row-main, .state-row.is-open .state-row-main { background: var(--nirmaan-blue-soft); }
+.state-rank { font-size: 12px; color: var(--nirmaan-faint); font-variant-numeric: tabular-nums; }
+.state-name { font-size: 14px; font-weight: 550; }
+.state-bar-track { height: 6px; border-radius: 3px; background: #e8edf2; overflow: hidden; }
+.state-bar-fill { display: block; height: 100%; background: var(--nirmaan-blue); border-radius: 3px; }
+.state-row:nth-child(2n) .state-bar-fill { background: var(--nirmaan-green); }
+.state-count { font-size: 13px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.state-count small { color: var(--nirmaan-faint); font-size: 11px; }
+.state-cost { font-size: 13px; font-weight: 550; text-align: right; font-variant-numeric: tabular-nums; color: var(--nirmaan-muted); }
+.state-chevron { text-align: center; color: var(--nirmaan-blue); font-size: 15px; }
+.state-detail { padding: 4px 4px 18px 44px; background: var(--nirmaan-panel-sunken); border-left: 3px solid var(--nirmaan-saffron); }
+.state-detail-stats { display: flex; gap: 32px; padding: 12px 0 14px; }
+.state-detail-stats span { display: block; font-size: 11px; color: var(--nirmaan-muted); margin-bottom: 2px; }
+.state-detail-stats strong { font-size: 15px; color: var(--nirmaan-text); }
+.state-detail-label { margin: 0 0 8px; font-size: 11px; color: var(--nirmaan-muted); }
+.state-project-chips { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.state-project-chips li { display: flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 6px; background: var(--nirmaan-panel); border: 1px solid var(--nirmaan-border); font-size: 12px; }
+.chip-name { color: var(--nirmaan-text); }
+.chip-cost { color: var(--nirmaan-blue-deep); font-weight: 650; white-space: nowrap; }
+.state-empty { padding: 24px 4px; color: var(--nirmaan-muted); font-size: 14px; }
+@media (max-width: 720px) { .state-row-main { grid-template-columns: 22px 1fr 74px 18px; } .state-bar-track, .state-cost { display: none; } .state-detail { padding-left: 20px; } .state-search input { width: 140px; } }

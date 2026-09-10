@@ -1,0 +1,41 @@
+# --- Web framework / serving (shared) ---------------------------------------
+fastapi==0.141.1
+uvicorn[standard]==0.52.4
+pydantic==2.13.5
+python-multipart>=0.0.9,<1
+
+# --- Data / ML (shared) -------------------------------------------------------
+pandas==3.0.2
+numpy==2.4.4
+scikit-learn==1.9.0
+joblib>=1.3,<2
+
+# --- Cost/time-overrun regression only ---------------------------------------
+scipy==1.17.1
+xgboost==3.4.1
+lightgbm==4.7.0
+catboost==1.2.10
+
+# --- Overrun-risk classification only -----------------------------------------
+shap>=0.44.0
+
+# --- GenAI project summary: LangChain + LangGraph, free Gemini model with a --
+# --- Hugging Face (Qwen) fallback --------------------------------------------
+langchain-core>=1.0.0,<2.0.0
+langchain-google-genai>=4.0.0,<5.0.0
+langchain-huggingface>=1.0.0,<2.0.0
+langgraph>=1.0.0,<2.0.0
+python-dotenv>=1.0.0
+
+# --- User authentication (stdlib-only: sqlite3 + hashlib + hmac) -------------
+# No additional packages needed — Python's stdlib provides everything required:
+#   sqlite3   (user database)
+#   hashlib   (PBKDF2-HMAC-SHA256 password hashing)
+#   hmac      (HS256 JWT signing)
+#   secrets   (secure comparison + salt generation)
+#   base64    (JWT encoding)
+
+# --- Training-only (classification retraining scripts; not needed to serve) --
+optuna>=3.0.0
+imbalanced-learn>=0.11.0
+

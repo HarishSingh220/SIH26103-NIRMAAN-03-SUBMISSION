@@ -1,0 +1,34 @@
+@import "./nirmaan-tokens.css";
+
+.nirmaan-section {
+  background: var(--nirmaan-panel);
+  border: 1px solid var(--nirmaan-border);
+  border-radius: var(--nirmaan-radius-md);
+  box-shadow: var(--nirmaan-shadow-sm);
+  padding: var(--nirmaan-sp-5) var(--nirmaan-sp-5) var(--nirmaan-sp-4);
+  color: var(--nirmaan-text);
+  text-align: left;
+  margin-top: var(--nirmaan-sp-4);
+  position: relative;
+  overflow: hidden;
+}
+
+.nirmaan-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 54px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--nirmaan-saffron) 0 33%, #e5e9ed 33% 66%, var(--nirmaan-green) 66% 100%);
+}
+
+.nirmaan-section-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; flex-wrap: wrap; margin-bottom: 18px; }
+.nirmaan-section-head h2 { font-size: var(--nirmaan-fs-h2); margin: 0 0 4px; color: var(--nirmaan-text); }
+.nirmaan-subtitle { margin: 0; font-size: var(--nirmaan-fs-small); color: var(--nirmaan-muted); max-width: 46ch; }
+
+.nirmaan-view-all { display: block; width: 100%; margin-top: 14px; padding: 10px; border-radius: 6px; border: 1px solid var(--nirmaan-border); background: var(--nirmaan-panel-sunken); color: var(--nirmaan-blue-deep); font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; }
+.nirmaan-view-all:hover { background: var(--nirmaan-blue-soft); border-color: var(--nirmaan-blue-line); }
+.nirmaan-view-all:focus-visible, .state-search input:focus-visible, .hv-sector-select:focus-visible, .state-row-main:focus-visible { outline: 2px solid var(--nirmaan-saffron); outline-offset: 2px; }
+
+@media (max-width: 720px) { .nirmaan-section { padding: 18px 16px 16px; } }

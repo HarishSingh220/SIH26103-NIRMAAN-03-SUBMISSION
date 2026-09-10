@@ -1,0 +1,868 @@
+/* =========================
+   LOGIN PAGE
+========================= */
+
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  overflow: hidden;
+  background: #071525;
+  color: #ffffff;
+  font-family: "Inter", "Segoe UI", sans-serif;
+}
+
+
+/* =========================
+   LEFT VISUAL SECTION
+========================= */
+
+.login-visual {
+  position: relative;
+  width: 58%;
+  min-height: 100vh;
+  overflow: hidden;
+  padding: 48px 60px;
+  box-sizing: border-box;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(31, 91, 145, 0.25), transparent 45%),
+    linear-gradient(135deg, #071525 0%, #0b2139 55%, #102e4d 100%);
+}
+
+/* subtle grid */
+
+.login-visual::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+  background-size: 45px 45px;
+  mask-image: linear-gradient(to bottom, transparent, black 20%, black 80%, transparent);
+}
+
+
+/* =========================
+   BRAND
+========================= */
+
+.brand-block {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.brand-logo {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #ff9933, #ffffff, #138808);
+  color: #071525;
+  font-size: 23px;
+  font-weight: 800;
+  box-shadow: 0 0 25px rgba(255, 153, 51, 0.25);
+}
+
+.brand-block h1 {
+  margin: 0;
+  font-size: 21px;
+  letter-spacing: 4px;
+  font-weight: 700;
+  color:#ebeff3
+}
+
+.brand-block p {
+  margin: 3px 0 0;
+  color: #9fb2c8;
+  font-size: 11px;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+}
+
+
+/* =========================
+   HERO TEXT
+========================= */
+
+.hero-text {
+  position: absolute !important;
+  top: 55px;
+  right: 55px;
+  z-index: 10;
+  text-align: right;
+  width: 380px;
+}
+
+.hero-text span {
+  display: block;
+  color: #a9bbce;
+  font-size: 14px;
+  letter-spacing: 3px;
+  margin-bottom: 8px;
+}
+
+.hero-text strong {
+  display: block;
+  font-size: 25px;
+  line-height: 1.1;
+  letter-spacing: -1px;
+}
+
+/* =========================
+   INDIA NETWORK
+========================= */
+
+.india-network {
+  position: absolute;
+  width: 470px;
+  height: 500px;
+  left: 50%;
+  top: 52%;
+  transform: translate(-50%, -50%);
+}
+
+
+/* glowing centre */
+
+.india-glow {
+  position: absolute;
+  width: 360px;
+  height: 360px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(35, 116, 184, 0.22),
+    rgba(35, 116, 184, 0.05) 45%,
+    transparent 70%
+  );
+  filter: blur(8px);
+  animation: pulseGlow 4s ease-in-out infinite;
+}
+
+
+/* temporary India geometry */
+
+.india-map {
+  position: absolute;
+  width: 580px;
+  height: 630px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -45%);
+}
+
+
+/* network lines */
+
+.map-line {
+  position: absolute;
+  height: 1px;
+  transform-origin: left center;
+  background: linear-gradient(
+    90deg,
+    rgba(255,153,51,0.05),
+    rgba(117,190,255,0.75),
+    rgba(19,136,8,0.2)
+  );
+  animation: linePulse 3s ease-in-out infinite;
+}
+
+.line-1 {
+  width: 160px;
+  left: 30px;
+  top: 80px;
+  transform: rotate(18deg);
+}
+
+.line-2 {
+  width: 190px;
+  left: 65px;
+  top: 125px;
+  transform: rotate(38deg);
+  animation-delay: .5s;
+}
+
+.line-3 {
+  width: 150px;
+  left: 90px;
+  top: 175px;
+  transform: rotate(70deg);
+  animation-delay: 1s;
+}
+
+.line-4 {
+  width: 130px;
+  left: 80px;
+  top: 220px;
+  transform: rotate(110deg);
+  animation-delay: 1.5s;
+}
+
+.line-5 {
+  width: 115px;
+  left: 50px;
+  top: 145px;
+  transform: rotate(150deg);
+  animation-delay: 2s;
+}
+
+
+/* nodes */
+
+.map-node {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #75c7ff;
+  box-shadow:
+    0 0 8px #75c7ff,
+    0 0 20px rgba(117,199,255,0.7);
+  animation: nodePulse 2.5s ease-in-out infinite;
+}
+
+.node-a { left: 42px; top: 75px; }
+.node-b { left: 120px; top: 100px; animation-delay: .3s; }
+.node-c { left: 180px; top: 135px; animation-delay: .6s; }
+.node-d { left: 95px; top: 170px; animation-delay: .9s; }
+.node-e { left: 155px; top: 205px; animation-delay: 1.2s; }
+.node-f { left: 75px; top: 235px; animation-delay: 1.5s; }
+.node-g { left: 140px; top: 270px; animation-delay: 1.8s; }
+.node-h { left: 115px; top: 315px; animation-delay: 2.1s; }
+
+
+/* =========================
+   ORBITING DOTS
+========================= */
+
+.orbit-dot {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 0 12px rgba(255,255,255,0.9);
+}
+
+.orbit-1 {
+  left: 30%;
+  top: 20%;
+  animation: floatOne 7s linear infinite;
+}
+
+.orbit-2 {
+  left: 70%;
+  top: 35%;
+  background: #ff9933;
+  box-shadow: 0 0 12px rgba(255,153,51,0.8);
+  animation: floatTwo 9s linear infinite;
+}
+
+.orbit-3 {
+  left: 65%;
+  top: 70%;
+  background: #138808;
+  box-shadow: 0 0 12px rgba(19,136,8,0.8);
+  animation: floatThree 8s linear infinite;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+.hero-footer {
+  position: absolute;
+  z-index: 5;
+  left: 60px;
+  bottom: 42px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.hero-footer p {
+  margin: 0;
+  color: #758ba2;
+  font-size: 9px;
+  letter-spacing: 1.2px;
+}
+
+.hero-footer span {
+  display: block;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+}
+
+.saffron {
+  background: #ff9933;
+}
+
+.white {
+  background: #ffffff;
+}
+
+.green {
+  background: #138808;
+}
+
+
+/* =========================
+   RIGHT LOGIN PANEL
+========================= */
+
+.login-panel {
+  width: 42%;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  box-sizing: border-box;
+  background: #f4f7fa;
+}
+
+
+/* =========================
+   LOGIN CARD
+========================= */
+
+.login-card {
+  position: relative;
+  width: min(430px, 100%);
+  padding: 42px;
+  box-sizing: border-box;
+  background: rgba(255,255,255,0.96);
+  border: 1px solid rgba(17,43,69,0.08);
+  border-radius: 18px;
+  box-shadow:
+    0 25px 70px rgba(7,21,37,0.14),
+    0 5px 20px rgba(7,21,37,0.06);
+  animation: cardEnter .7s ease-out;
+}
+
+
+/* tricolor line */
+
+.tricolor-line {
+  display: flex;
+  height: 3px;
+  width: 75px;
+  margin-bottom: 30px;
+  overflow: hidden;
+  border-radius: 4px;
+}
+
+.tricolor-line span:nth-child(1) {
+  flex: 1;
+  background: #ff9933;
+}
+
+.tricolor-line span:nth-child(2) {
+  flex: 1;
+  background: #dfe5eb;
+}
+
+.tricolor-line span:nth-child(3) {
+  flex: 1;
+  background: #138808;
+}
+
+
+.login-card h2 {
+  margin: 0;
+  color: #10243d;
+  font-size: 30px;
+  font-weight: 700;
+}
+
+.login-subtitle {
+  margin: 8px 0 30px;
+  color: #718096;
+  font-size: 14px;
+}
+
+
+/* =========================
+   INPUTS
+========================= */
+
+.input-group {
+  margin-bottom: 20px;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: #34495e;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.input-wrapper {
+  position: relative;
+}
+
+.input-icon {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #8da0b3;
+  font-size: 17px;
+}
+
+.input-wrapper input {
+  width: 100%;
+  height: 48px;
+  padding: 0 45px;
+  box-sizing: border-box;
+  border: 1px solid #d9e0e7;
+  border-radius: 9px;
+  outline: none;
+  background: #ffffff;
+  color: #172b40;
+  font-size: 14px;
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+
+.input-wrapper input:focus {
+  border-color: #3976a8;
+  box-shadow: 0 0 0 3px rgba(57,118,168,0.1);
+}
+
+.input-wrapper input::placeholder {
+  color: #a5b1bd;
+}
+
+
+/* password button */
+
+.password-toggle {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: transparent;
+  color: #7d8c9b;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+
+/* =========================
+   OPTIONS
+========================= */
+
+.login-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 5px 0 25px;
+  font-size: 12px;
+}
+
+.remember {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #65778a;
+  cursor: pointer;
+}
+
+.remember input {
+  accent-color: #17466f;
+}
+
+.forgot {
+  border: none;
+  background: transparent;
+  color: #1d5c91;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.forgot:hover {
+  text-decoration: underline;
+}
+
+
+/* =========================
+   LOGIN BUTTON
+========================= */
+
+.login-button {
+  width: 100%;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  border: none;
+  border-radius: 9px;
+  background: linear-gradient(135deg, #12385c, #1d5c91);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(18,56,92,0.2);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.login-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 25px rgba(18,56,92,0.28);
+}
+
+.login-arrow {
+  font-size: 18px;
+  transition: transform .2s ease;
+}
+
+.login-button:hover .login-arrow {
+  transform: translateX(4px);
+}
+
+
+/* =========================
+   DIVIDER
+========================= */
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 28px 0 22px;
+}
+
+.divider span {
+  flex: 1;
+  height: 1px;
+  background: #e4e8ed;
+}
+
+.divider p {
+  margin: 0;
+  color: #9aa7b4;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+
+/* =========================
+   REGISTER
+========================= */
+
+.register-text {
+  margin: 0;
+  text-align: center;
+  color: #7b8997;
+  font-size: 13px;
+}
+
+.register-text button {
+  margin-left: 5px;
+  border: none;
+  background: transparent;
+  color: #1d5c91;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.register-text button:hover {
+  text-decoration: underline;
+}
+
+
+/* =========================
+   ANIMATIONS
+========================= */
+
+@keyframes pulseGlow {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: .65;
+  }
+
+  50% {
+    transform: translate(-50%, -50%) scale(1.12);
+    opacity: 1;
+  }
+}
+
+@keyframes nodePulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: .65;
+  }
+
+  50% {
+    transform: scale(1.7);
+    opacity: 1;
+  }
+}
+
+@keyframes linePulse {
+  0%, 100% {
+    opacity: .25;
+  }
+
+  50% {
+    opacity: .85;
+  }
+}
+
+@keyframes floatOne {
+  0% {
+    transform: translate(0, 0);
+  }
+
+  50% {
+    transform: translate(90px, 50px);
+  }
+
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+@keyframes floatTwo {
+  0% {
+    transform: translate(0, 0);
+  }
+
+  50% {
+    transform: translate(-70px, 100px);
+  }
+
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+@keyframes floatThree {
+  0% {
+    transform: translate(0, 0);
+  }
+
+  50% {
+    transform: translate(80px, -60px);
+  }
+
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+@keyframes cardEnter {
+  from {
+    opacity: 0;
+    transform: translateX(25px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 900px) {
+  .login-visual {
+    width: 50%;
+    padding: 35px;
+  }
+
+  .login-panel {
+    width: 50%;
+    padding: 25px;
+  }
+
+  .hero-text {
+    margin-top: 70px;
+  }
+
+  .india-network {
+    transform: translate(-50%, -50%) scale(.8);
+  }
+
+  .hero-footer {
+    left: 35px;
+  }
+}
+
+
+@media (max-width: 700px) {
+  .login-page {
+    display: block;
+  }
+
+  .login-visual {
+    width: 100%;
+    min-height: 300px;
+    height: 300px;
+    padding: 25px;
+  }
+
+  .login-panel {
+    width: 100%;
+    min-height: calc(100vh - 300px);
+    padding: 30px 20px;
+  }
+
+  .hero-text {
+  position: relative;
+  z-index: 10;
+ }
+  .hero-text strong {
+    font-size: 27px;
+  }
+
+  .india-network {
+    opacity: .45;
+    transform: translate(-20%, -50%) scale(.55);
+  }
+
+  .hero-footer {
+    display: none;
+  }
+
+  .login-card {
+    padding: 30px 25px;
+  }
+}
+/* ================================
+   REAL INDIA SVG
+================================ */
+
+
+
+
+ .india-svg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+
+  /* Make the navy SVG outline bright */
+  filter:
+    brightness(0)
+    invert(1)
+    drop-shadow(0 0 4px rgba(255, 255, 255, 0.8))
+    drop-shadow(0 0 12px rgba(70, 150, 255, 0.7))
+    drop-shadow(0 0 28px rgba(70, 150, 255, 0.45));
+
+  opacity: 0.65;
+  mix-blend-mode: screen;
+}
+
+
+
+/* ================================
+   NETWORK NODES
+================================ */
+
+.map-node {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #ffffff;
+
+  box-shadow:
+    0 0 4px #ffffff,
+    0 0 8px #4da6ff,
+    0 0 14px rgba(77, 166, 255, 0.7);
+
+  animation: nodePulse 2.5s infinite ease-in-out;
+}
+
+
+/* Approximate positions over the real map */
+
+.node-a {
+  top: 18%;
+  left: 48%;
+  animation-delay: 0s;
+}
+
+.node-b {
+  top: 32%;
+  left: 58%;
+  animation-delay: 0.4s;
+}
+
+.node-c {
+  top: 43%;
+  left: 43%;
+  animation-delay: 0.8s;
+}
+
+.node-d {
+  top: 52%;
+  left: 55%;
+  animation-delay: 1.2s;
+}
+
+.node-e {
+  top: 63%;
+  left: 48%;
+  animation-delay: 1.6s;
+}
+
+.node-f {
+  top: 75%;
+  left: 43%;
+  animation-delay: 2s;
+}
+
+.node-g {
+  top: 47%;
+  left: 68%;
+  animation-delay: 0.6s;
+}
+
+.node-h {
+  top: 83%;
+  left: 60%;
+  animation-delay: 1.4s;
+}
+
+/* Register page - fit entire form on screen */
+.register-card {
+  max-height: 90vh;
+  overflow:  visible;
+}
+
+.register-card .input-group {
+  margin-bottom: 10px;
+}
+
+.register-card .input-wrapper input {
+  height: 38px;
+}
+
+.register-card h2 {
+  margin-bottom: 6px;
+}
+
+.register-card .login-subtitle {
+  margin-bottom: 14px;
+}
+
+.register-card .divider {
+  margin: 12px 0;
+}

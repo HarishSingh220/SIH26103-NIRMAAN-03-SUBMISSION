@@ -1,0 +1,135 @@
+{
+  "target": "final_cost_overrun_pct",
+  "target_scope": "resolved, strictly positive overruns only",
+  "required_raw_input_columns": [
+    "project_code",
+    "reporting_period_date",
+    "project_name",
+    "sector",
+    "state",
+    "agency_name",
+    "quarter",
+    "financial_year",
+    "original_cost_rs_cr",
+    "cumulative_expenditure_rs_cr",
+    "expenditure_to_cost_pct",
+    "project_age_at_report_months",
+    "planned_duration_months",
+    "progress_ratio",
+    "landmark_index",
+    "n_landmarks_total",
+    "horizon_months"
+  ],
+  "models": {
+    "model_b": {
+      "description": "XGBoost+LightGBM+CatBoost SLSQP ensemble with a 'RAILWAYS' sector interaction block.",
+      "sector": "RAILWAYS",
+      "numerical_features": [
+        "original_cost_rs_cr",
+        "cumulative_expenditure_rs_cr",
+        "expenditure_to_cost_pct",
+        "project_age_at_report_months",
+        "planned_duration_months",
+        "progress_ratio",
+        "landmark_index",
+        "n_landmarks_total",
+        "horizon_months",
+        "landmark_completion_ratio",
+        "remaining_landmarks",
+        "expenditure_per_landmark_rs_cr",
+        "cost_per_landmark_planned_rs_cr",
+        "expenditure_progress_gap",
+        "horizon_to_planned_ratio",
+        "fy_start_year",
+        "quarter_num",
+        "expenditure_velocity",
+        "expenditure_acceleration",
+        "progress_velocity",
+        "progress_acceleration",
+        "rolling_expenditure_mean",
+        "rolling_expenditure_std",
+        "rolling_progress_mean",
+        "rolling_progress_std",
+        "state_was_missing",
+        "agency_name_was_missing",
+        "cumulative_expenditure_rs_cr_was_missing",
+        "expenditure_to_cost_pct_was_missing",
+        "project_age_at_report_months_was_missing",
+        "planned_duration_months_was_missing",
+        "railways_flag",
+        "railways_expenditure_gap",
+        "railways_maturity",
+        "railways_expenditure_velocity",
+        "railways_progress_velocity"
+      ],
+      "categorical_features": [
+        "sector",
+        "state",
+        "agency_name"
+      ],
+      "ensemble_weights": {
+        "xgboost": 0.17460165884572595,
+        "lightgbm": 0.5116101617466006,
+        "catboost": 0.3137881794076734
+      },
+      "test_metrics": {
+        "MAE": 20.651526668001903,
+        "RMSE": 54.70275119115662,
+        "R2": 0.9299832838462475
+      },
+      "output_field": "predicted_final_cost_overrun_pct_model_b"
+    },
+    "final_model": {
+      "description": "XGBoost+LightGBM+CatBoost SLSQP ensemble on the full feature set, no interaction features.",
+      "numerical_features": [
+        "original_cost_rs_cr",
+        "cumulative_expenditure_rs_cr",
+        "expenditure_to_cost_pct",
+        "project_age_at_report_months",
+        "planned_duration_months",
+        "progress_ratio",
+        "landmark_index",
+        "n_landmarks_total",
+        "horizon_months",
+        "landmark_completion_ratio",
+        "remaining_landmarks",
+        "expenditure_per_landmark_rs_cr",
+        "cost_per_landmark_planned_rs_cr",
+        "expenditure_progress_gap",
+        "horizon_to_planned_ratio",
+        "fy_start_year",
+        "quarter_num",
+        "expenditure_velocity",
+        "expenditure_acceleration",
+        "progress_velocity",
+        "progress_acceleration",
+        "rolling_expenditure_mean",
+        "rolling_expenditure_std",
+        "rolling_progress_mean",
+        "rolling_progress_std",
+        "state_was_missing",
+        "agency_name_was_missing",
+        "cumulative_expenditure_rs_cr_was_missing",
+        "expenditure_to_cost_pct_was_missing",
+        "project_age_at_report_months_was_missing",
+        "planned_duration_months_was_missing"
+      ],
+      "categorical_features": [
+        "sector",
+        "state",
+        "agency_name"
+      ],
+      "ensemble_weights": {
+        "xgboost": 0.15015938256834394,
+        "lightgbm": 0.5965956877389689,
+        "catboost": 0.25324492969268725
+      },
+      "test_metrics": {
+        "MAE": 21.423819027869886,
+        "RMSE": 65.43839777314686,
+        "R2": 0.8998043851632711
+      },
+      "output_field": "predicted_final_cost_overrun_pct_final_model"
+    }
+  }
+}

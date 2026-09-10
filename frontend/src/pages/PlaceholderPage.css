@@ -1,0 +1,23 @@
+.placeholder-page {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  max-width: 760px;
+  margin: 72px auto;
+  padding: 40px;
+  background: var(--nirmaan-panel);
+  border: 1px solid var(--nirmaan-border);
+  border-radius: var(--nirmaan-radius-md);
+  box-shadow: var(--nirmaan-shadow-sm);
+  position: relative;
+  overflow: hidden;
+}
+.placeholder-page::before { content: ""; position: absolute; inset: 0 auto auto 0; width: 92px; height: 3px; background: linear-gradient(90deg, var(--nirmaan-saffron) 0 33%, #e5e9ed 33% 66%, var(--nirmaan-green) 66%); }
+.placeholder-icon { width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; border-radius: 8px; background: var(--nirmaan-blue-soft); color: var(--nirmaan-blue-deep); margin-bottom: 6px; }
+.placeholder-icon svg { width: 25px; height: 25px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.placeholder-page .eyebrow { margin: 0; }
+.placeholder-page h1 { margin: 4px 0 0; font-size: 28px; }
+.placeholder-page .subtitle { margin: 0; max-width: 62ch; }
+.placeholder-badge { margin-top: 14px; font-size: 11px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--nirmaan-blue-deep); background: var(--nirmaan-blue-soft); border: 1px solid var(--nirmaan-blue-line); padding: 5px 10px; border-radius: 5px; }
+@media (max-width: 640px) { .placeholder-page { margin: 36px 0; padding: 28px 22px; } }
