@@ -62,7 +62,17 @@ What reviewers actually need is more than a raw reporting dataset — they need:
 - An **estimate** of how large that overrun could be, in concrete terms (₹ Cr, months of delay).
 - A **plain-language explanation** of *why* the model is flagging the project, so the finding is trustworthy and actionable rather than a black-box number.
 
-Nirmaan O3 is built to close this gap — converting a static, descriptive reporting pipeline into a predictive, explainable, and prioritised one.
+### A Real-World Scenario
+
+Consider a mid-sized railway doubling project, sanctioned at ₹200 Cr with a commissioning target four years out. For the first six quarters, the numbers look unremarkable — expenditure tracks roughly in line with the approved schedule, and nothing in the raw report stands out to a reviewer skimming hundreds of similar entries.
+
+By the seventh or eighth quarter, however, the underlying pattern has actually shifted: the spending pace has quietly outrun physical progress, milestone reporting has slowed, and the anticipated commissioning date has been pushed back more than once. None of these individual data points looks alarming in isolation — that's exactly why they go unnoticed. It's only when they're read together, against the project's own history and against how comparable projects normally behave, that the shape of a coming overrun becomes visible.
+
+In today's process, this pattern is typically caught only when the overrun is already large enough to be undeniable in the summary figures — often a year or more after the point where early intervention (renegotiating a contractor timeline, reallocating funds, escalating to the right authority) would have been cheap and effective. At that stage, the ministry is left managing the fallout — a cost overrun that has to be absorbed, a delay that pushes back public benefit, and a project that becomes a talking point in review meetings rather than a success story.
+
+This is the exact moment Nirmaan O3 is designed to catch. Applied to a project like this, the anomaly detector would have flagged the widening gap between spending and progress as early as the sixth or seventh quarter; the classifier would have raised the project's time-overrun probability well before the delay became visible in the raw numbers; and the regression layer would have quantified the likely scale of the problem — turning "something looks off" into "this project is on track for an estimated 25–30 month delay, driven primarily by a high progress ratio and a slowing reporting cadence." A reviewer sees that finding a year earlier, with a plain-language reason attached, instead of discovering it after the fact.
+
+Multiply this by the thousands of projects tracked under central monitoring frameworks, spread across 27+ sectors and every state and union territory, and the scale of the problem — and the value of catching it early — becomes clear. No team of reviewers can manually re-derive this kind of pattern, quarter after quarter, across a portfolio this large. That is precisely the gap Nirmaan O3 is built to close — converting a static, descriptive reporting pipeline into a predictive, explainable, and prioritised one.
 
 ---
 
@@ -92,6 +102,28 @@ Nirmaan O3 is an AI-powered infrastructure risk monitoring system that sits on t
 - **Supports faster and evidence-based decision-making** — dashboards, quarterly trends, and risk scores give decision-makers a single, current view instead of scattered reports.
 
 **Flow:** Detect → Predict → Explain → Prioritize → Act
+
+### Real-World Impact & Benefits
+
+The value of this shift shows up differently depending on who's using it:
+
+**For project review officers**
+- Instead of reviewing every project with equal, shallow attention, officers get a ranked list of the projects that actually need their time — turning a flat, thousands-of-rows dataset into a short, prioritised worklist.
+- Every flag comes with a plain-language reason, so a reviewer doesn't have to take the model's word for it — they can see *why* a project was flagged and verify it in minutes instead of re-deriving the pattern from scratch.
+
+**For ministries and programme managers**
+- Overruns caught a year (or several quarters) earlier are, in practice, far cheaper to fix — a contractor timeline can be renegotiated, funds reallocated, or an escalation raised while the problem is still small. Left uncaught, the same issue tends to compound with each passing quarter.
+- Portfolio-level dashboards (sector-wise, ministry-wise, state-wise) give programme managers a live view of where risk is concentrated, instead of waiting for a periodic manual review to surface it.
+
+**For auditors and central monitoring bodies**
+- A consistent, model-driven first pass reduces the variance that comes from different reviewers applying different judgment to the same data — every project is screened against the same criteria.
+- Explainable outputs (SHAP-based reasons, LLM summaries) mean findings can be defended in an audit or review setting, not just asserted.
+
+**For the public and end beneficiaries**
+- Infrastructure projects — roads, railways, power, atomic energy, housing — exist to deliver a public benefit on a timeline. Every quarter of undetected delay is a quarter that benefit is deferred.
+- Earlier, more consistent oversight is a direct contributor to public trust in how large-scale infrastructure spending is managed, since fewer projects arrive at "surprise" overruns that could have been anticipated.
+
+**In short:** the system doesn't just add a predictive layer on top of existing reporting — it changes *when* a problem becomes visible, from "after it's already happened" to "while it's still fixable," and it does so at a scale no manual review process can match.
 
 ---
 
