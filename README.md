@@ -211,6 +211,10 @@ See [assets/screenshots/README.md](screenshots/SCREENSHOTS_README.md) for naming
 - **Model drift monitoring:** track prediction accuracy against newly reported outcomes over time, since current validation only certifies performance up to the current data cutoff.
 - See Section 7 ("Future Technologies") and Section 10 ("Practical Implementation") for the planned integration, scaling, and deployment roadmap.
 
+
+## 15. A complete report of the model evaluation and the comparison between statistical models(conventional) vs ML models(our approach)
+See [docs/report.md](docs/report.md) for the full report in detail.
+
 # PAIMANA Combined Prediction API
 
 One FastAPI service exposing three independently trained models behind one process:
