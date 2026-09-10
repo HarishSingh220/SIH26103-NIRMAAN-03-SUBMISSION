@@ -118,7 +118,7 @@ Infrastructure projects reported under central monitoring frameworks (PAIMANA qu
 
 ## 8. Architecture
 
-See [docs/architecture.md](https://drive.google.com/file/d/1fh3_72chZOkZwIdN2LPNIny9NcwnU8zO/view?usp=sharing) for the full pipeline diagram.
+See [docs/architecture.md](docs.architecture.md) for the full pipeline diagram.
 
 ```text
 Raw PAIMANA quarterly reporting data (PDF → structured CSV)
@@ -202,7 +202,7 @@ If the PPT is too large for GitHub, use Google Drive/OneDrive and put the access
 
 ## 12. Demo Video
 
-Add the YouTube/Google Drive link in [submission/DEMO.md](submission/DEMO.md).
+Add the YouTube/Google Drive link in [submission/DEMO.md](submission/demo.md).
 
 ## 13. Screenshots / Prototype
 
@@ -238,7 +238,7 @@ Add the YouTube/Google Drive link in [submission/DEMO.md](submission/DEMO.md).
 
 &nbsp;
 
-See [assets/screenshots/README.md](assets/screenshots/README.md) for naming conventions.
+See [assets/screenshots/README.md](screenshots/README.md) for naming conventions.
 
 ## 14. Future Scope
 
