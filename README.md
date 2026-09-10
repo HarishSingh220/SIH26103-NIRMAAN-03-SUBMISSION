@@ -118,7 +118,7 @@ Infrastructure projects reported under central monitoring frameworks (PAIMANA qu
 
 ## 8. Architecture
 
-See [docs/architecture.md](docs.architecture.md) for the full pipeline diagram.
+See [docs/architecture.md](docs/architecture.md) for the full pipeline diagram.
 
 ```text
 Raw PAIMANA quarterly reporting data (PDF → structured CSV)
@@ -194,51 +194,16 @@ Interactive Dashboard  (single / batch / CSV input, graphs & visual analytics)
 
 ## 11. Final Presentation
 
-Keep the final SIH presentation in the repository whenever the file size allows it.
-
-See [submission/PRESENTATION.md](submission/PRESENTATION.md) for the required format.
-
-If the PPT is too large for GitHub, use Google Drive/OneDrive and put the accessible viewer link in `submission/PRESENTATION.md`.
+See [submission/PRESENTATION.md](submission/SIH26103-NIRMAAN_O3-PRESENTATION.pdf) for the required format.
+You can also see the ppt at (https://drive.google.com/file/d/1nvShelR5IRA0UcZmj8oIjdul3T6QGoLb/view?usp=sharing)
 
 ## 12. Demo Video
 
-Add the YouTube/Google Drive link in [submission/DEMO.md](submission/demo.md).
+[submission/DEMO.md](submission/demo.md).
 
 ## 13. Screenshots / Prototype
 
-<!-- Prototype images go here. Add files to assets/screenshots/ and update the paths below. -->
-
-**Dashboard / reviewer view**
-
-<!-- ![Dashboard overview](assets/screenshots/dashboard-overview.png) -->
-
-&nbsp;
-
-**Overrun prediction result view**
-
-<!-- ![Prediction result](assets/screenshots/prediction-result.png) -->
-
-&nbsp;
-
-**Anomaly detection view**
-
-<!-- ![Anomaly detection dashboard](assets/screenshots/anomaly-detection.png) -->
-
-&nbsp;
-
-**Risk score / LLM summary view**
-
-<!-- ![Risk summary view](assets/screenshots/risk-summary.png) -->
-
-&nbsp;
-
-**Architecture / system diagram**
-
-<!-- ![System architecture](assets/screenshots/architecture-diagram.png) -->
-
-&nbsp;
-
-See [assets/screenshots/README.md](screenshots/README.md) for naming conventions.
+See [assets/screenshots/README.md](screenshots/SCREENSHOTS_README.md) for naming conventions.
 
 ## 14. Future Scope
 
